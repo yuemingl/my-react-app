@@ -26,6 +26,7 @@
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root"></div>
+    <div id="testDiv"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -37,4 +38,38 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script type="text/javascript">
+    async function asyncFunc() {
+      return await fetch('http://localhost:3001/data.json', {'mode': 'no-cors'});
+    }
+    console.log(asyncFunc());
+    asyncFunc()
+    .then(Resp => {
+      console.log(Resp.url);
+      Resp.json().then( function(data) {
+        console.log(data);
+      })
+    });
+
+
+    // Before: callback city!
+    fetch('/data.json')
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      })
+      .catch(e => { console.log('error!'); })
+
+    // After: no more callbacks!
+    let main = (async function () {
+      try {
+        let response = await fetch('/data.json');
+        let json = await response.json();
+        console.log(json);
+      }
+      catch(e) {
+        console.log('Error!', e);
+      }
+    })();
+  </script>
 </html>

@@ -146,9 +146,42 @@ function calculateWinner(squares) {
   return null;
 }
 
+
+class TestDiv extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state={data:"XXX"};
+    (async function(testDiv) {
+      try {
+        let response = await fetch('/data.json');
+        let json = await response.json();
+        console.log(json);
+        console.log("****");
+        testDiv.setState({data:json})
+      }
+      catch(e) {
+        console.log('Error!', e);
+      }
+    })(this);
+  }
+
+  render() {
+    return (
+      <button className="square">
+        {this.props.value}
+        {this.state.data}
+      </button>
+      );
+  }
+}
+
 // ========================================
 
 ReactDOM.render(
   <Game t1="123" t2="456" />,
   document.getElementById('root')
+);
+ReactDOM.render(
+  <TestDiv />,
+  document.getElementById('testDiv')
 );
