@@ -68,6 +68,29 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    this._handleClick(i);
+    console.log("clicked:"+i);
+    (async function(game, pos) {
+      try {
+        let response = await fetch('http://localhost:4567/hello?p='+pos);
+        let json = await response.json();
+        console.log(json);
+        console.log("****");
+        game._handleClick(parseInt(json));
+      }
+      catch(e) {
+        console.log('Error!', e);
+      }
+    })(this, i);
+  }
+
+  _handleClick(i) {
+    const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    const current = history[history.length - 1];
+    const squares = current.squares.slice();
 
     if (calculateWinner(squares) || squares[i]) {
       return;
@@ -87,6 +110,17 @@ class Game extends React.Component {
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
+    (async function() {
+      try {
+        let response = await fetch('http://localhost:4567/hello?p=-1');
+        let json = await response.json();
+        console.log(json);
+        console.log("****");
+      }
+      catch(e) {
+        console.log('Error!', e);
+      }
+    })();
   }
 
   render() {
@@ -181,7 +215,4 @@ ReactDOM.render(
   <Game t1="123" t2="456" />,
   document.getElementById('root')
 );
-ReactDOM.render(
-  <TestDiv />,
-  document.getElementById('testDiv')
-);
+
